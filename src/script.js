@@ -162,3 +162,66 @@ paintTimer();
   reducedMotion.addEventListener?.('change', setPaused);
   setPaused();
 })();
+
+
+// Section 2: staggered fade-in for the three core ideas.
+(() => {
+  const section = $('#ba-y');
+  const items = $$('#statsReveal .stats-item');
+  const resetButton = $('#statsReset');
+  if (!section || !items.length || !resetButton) return;
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let hasRevealed = false;
+  let observer = null;
+  let pendingTimers = [];
+
+  const cancelPending = () => {
+    pendingTimers.forEach(timer => clearTimeout(timer));
+    pendingTimers = [];
+  };
+  const revealOnce = () => {
+    if (hasRevealed || reducedMotion.matches) {
+      if (reducedMotion.matches) items.forEach(item => item.classList.add('is-revealed'));
+      return;
+    }
+    hasRevealed = true;
+    cancelPending();
+    items.forEach((item, index) => {
+      const timer = window.setTimeout(() => {
+        item.classList.add('is-revealed');
+        pendingTimers = pendingTimers.filter(id => id !== timer);
+      }, index * 200);
+      pendingTimers.push(timer);
+    });
+  };
+  const reset = () => {
+    cancelPending();
+    hasRevealed = false;
+    items.forEach(item => item.classList.remove('is-revealed'));
+    if (reducedMotion.matches) {
+      items.forEach(item => item.classList.add('is-revealed'));
+      hasRevealed = true;
+    }
+  };
+  observer = new IntersectionObserver(entries => {
+    const entry = entries[0];
+    if (!entry) return;
+    if (entry.isIntersecting) revealOnce();
+    else cancelPending();
+  }, { threshold: 0.2 });
+  observer.observe(section);
+  resetButton.addEventListener('click', () => {
+    reset();
+    // If the section is currently visible, start the sequence again immediately.
+    const rect = section.getBoundingClientRect();
+    if (rect.bottom > 0 && rect.top < window.innerHeight) revealOnce();
+  });
+  reducedMotion.addEventListener?.('change', () => {
+    if (reducedMotion.matches) {
+      cancelPending();
+      items.forEach(item => item.classList.add('is-revealed'));
+      hasRevealed = true;
+    }
+  });
+  if (reducedMotion.matches) reset();
+})();
