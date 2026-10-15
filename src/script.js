@@ -90,3 +90,73 @@ $$('.mode').forEach(button => button.addEventListener('click', () => {
   paintTimer();
 }));
 paintTimer();
+
+// Group intro motion: small pointer parallax, sparse falling particles, no audio.
+// Pause decorative motion whenever the tab is hidden or the section leaves the viewport.
+(() => {
+  const scene = $('.intro-scene');
+  if (!scene) return;
+  const particlesLayer = $('.intro-particles');
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let inView = false;
+  let pointerX = 0;
+  let pointerY = 0;
+  let frame = 0;
+
+  if (!reducedMotion.matches && particlesLayer) {
+    for (let i = 0; i < 14; i++) {
+      const particle = document.createElement('span');
+      particle.className = 'intro-particle';
+      particle.style.left = (4 + Math.random() * 92) + '%';
+      particle.style.setProperty('--fall-duration', (10 + Math.random() * 8) + 's');
+      particle.style.setProperty('--fall-delay', (-Math.random() * 16) + 's');
+      particle.style.width = particle.style.height = (2 + Math.random() * 2) + 'px';
+      particlesLayer.appendChild(particle);
+    }
+  }
+
+  const setPaused = () => {
+    const paused = document.hidden || !inView || reducedMotion.matches;
+    scene.classList.toggle('is-paused', paused);
+    if (paused) {
+      scene.style.setProperty('--photo-x', '0px');
+      scene.style.setProperty('--photo-y', '0px');
+      scene.style.setProperty('--content-x', '0px');
+      scene.style.setProperty('--content-y', '0px');
+    }
+  };
+
+  const paintParallax = () => {
+    frame = 0;
+    if (document.hidden || !inView || reducedMotion.matches) return;
+    scene.style.setProperty('--photo-x', (-pointerX * 9).toFixed(2) + 'px');
+    scene.style.setProperty('--photo-y', (-pointerY * 6).toFixed(2) + 'px');
+    scene.style.setProperty('--content-x', (pointerX * 5).toFixed(2) + 'px');
+    scene.style.setProperty('--content-y', (pointerY * 3).toFixed(2) + 'px');
+  };
+
+  scene.addEventListener('pointermove', event => {
+    if (event.pointerType === 'touch' || reducedMotion.matches) return;
+    const rect = scene.getBoundingClientRect();
+    pointerX = Math.max(-1, Math.min(1, ((event.clientX - rect.left) / rect.width - .5) * 2));
+    pointerY = Math.max(-1, Math.min(1, ((event.clientY - rect.top) / rect.height - .5) * 2));
+    if (!frame) frame = requestAnimationFrame(paintParallax);
+  }, { passive: true });
+
+  scene.addEventListener('pointerleave', () => {
+    pointerX = 0; pointerY = 0;
+    scene.style.setProperty('--photo-x', '0px');
+    scene.style.setProperty('--photo-y', '0px');
+    scene.style.setProperty('--content-x', '0px');
+    scene.style.setProperty('--content-y', '0px');
+  }, { passive: true });
+
+  const observer = new IntersectionObserver(entries => {
+    inView = Boolean(entries[0] && entries[0].isIntersecting);
+    setPaused();
+  }, { threshold: 0.08 });
+  observer.observe(scene);
+  document.addEventListener('visibilitychange', setPaused);
+  reducedMotion.addEventListener?.('change', setPaused);
+  setPaused();
+})();
