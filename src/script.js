@@ -172,7 +172,7 @@ paintTimer();
   if (!section || !items.length || !resetButton) return;
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   let hasRevealed = false;
-  let observer = null;
+  let observer;
   let pendingTimers = [];
 
   const cancelPending = () => {
@@ -180,16 +180,20 @@ paintTimer();
     pendingTimers = [];
   };
   const revealOnce = () => {
-    if (hasRevealed || reducedMotion.matches) {
-      if (reducedMotion.matches) items.forEach(item => item.classList.add('is-revealed'));
+    if (reducedMotion.matches) {
+      items.forEach(item => item.classList.add('is-revealed'));
+      hasRevealed = true;
       return;
     }
-    hasRevealed = true;
+    if (hasRevealed) return;
     cancelPending();
-    items.forEach((item, index) => {
+    const hiddenItems = items.filter(item => !item.classList.contains('is-revealed'));
+    if (!hiddenItems.length) { hasRevealed = true; return; }
+    hiddenItems.forEach((item, index) => {
       const timer = window.setTimeout(() => {
         item.classList.add('is-revealed');
         pendingTimers = pendingTimers.filter(id => id !== timer);
+        if (items.every(element => element.classList.contains('is-revealed'))) hasRevealed = true;
       }, index * 200);
       pendingTimers.push(timer);
     });
@@ -212,7 +216,6 @@ paintTimer();
   observer.observe(section);
   resetButton.addEventListener('click', () => {
     reset();
-    // If the section is currently visible, start the sequence again immediately.
     const rect = section.getBoundingClientRect();
     if (rect.bottom > 0 && rect.top < window.innerHeight) revealOnce();
   });
@@ -221,6 +224,8 @@ paintTimer();
       cancelPending();
       items.forEach(item => item.classList.add('is-revealed'));
       hasRevealed = true;
+    } else {
+      reset();
     }
   });
   if (reducedMotion.matches) reset();
