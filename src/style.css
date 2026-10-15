@@ -71,3 +71,21 @@
   #cong-cu .focus-info p{font-size:14px}
   #ke-hoach .plan-tips li{font-size:13px}
 }
+
+
+/* Restore the soft background band for the three core ideas section. */
+.stats-section{
+  background:linear-gradient(135deg,#f0edff 0%,#f8f6ff 52%,#eef8f2 100%);
+  padding:28px 0 30px;
+  border-top:1px solid #ebe7ff;
+  border-bottom:1px solid #e9eaf2;
+}
+.stats-section .stats{
+  border-top:0;
+  border-bottom:0;
+}
+.stats-reset-wrap{padding-top:4px}
+.stats-reset{background:rgba(255,255,255,.78)}
+@media(max-width:620px){
+  .stats-section{padding:18px 0 22px}
+}
