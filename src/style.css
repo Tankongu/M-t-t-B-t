@@ -45,3 +45,29 @@
 .stats-reset:focus-visible{outline:3px solid #b9b0ff;outline-offset:3px}
 @media(max-width:620px){.stats-section{margin-bottom:65px}}
 @media(prefers-reduced-motion:reduce){.stats-item,.stats-item:nth-child(2),.stats-item:nth-child(3){opacity:1;transform:none;transition:none}}
+
+
+/* Readability pass: slightly larger type for content sections after the opening hero. */
+#phuong-phap .section-heading>p,
+#cong-cu .section-heading>p{font-size:14px;line-height:1.9}
+#phuong-phap .method-card p{font-size:14px;line-height:1.85}
+#phuong-phap .example{font-size:12px;line-height:1.85}
+#phuong-phap .small-disclaimer{font-size:12px;line-height:1.8}
+#ke-hoach .plan-copy>p{font-size:14px;line-height:1.9}
+#ke-hoach .plan-tips li{font-size:13px;line-height:1.8}
+#ke-hoach .planner label{font-size:12px}
+#ke-hoach .task-form input{font-size:13px}
+#ke-hoach .user-task span{font-size:13px}
+#ke-hoach .planner-footer{font-size:11px}
+#cong-cu .focus-info p{font-size:14px;line-height:1.9}
+#cong-cu .mode{font-size:11px}
+#cong-cu .timer-center small{font-size:10px}
+.closing p{font-size:13px;line-height:1.9}
+@media(max-width:620px){
+  #phuong-phap .section-heading>p,
+  #cong-cu .section-heading>p,
+  #phuong-phap .method-card p,
+  #ke-hoach .plan-copy>p,
+  #cong-cu .focus-info p{font-size:14px}
+  #ke-hoach .plan-tips li{font-size:13px}
+}
