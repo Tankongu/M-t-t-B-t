@@ -30,3 +30,18 @@
 @media(max-width:800px){.intro-scene{min-height:640px}.intro-shade{background:linear-gradient(90deg,rgba(19,18,39,.84),rgba(25,23,49,.55)),linear-gradient(0deg,rgba(17,16,35,.55),transparent 60%)}.intro-content{padding-top:90px;padding-bottom:110px}.intro-content h1{font-size:clamp(46px,9vw,68px)}.intro-bg-word{font-size:24vw}.intro-image-note{display:none}}
 @media(max-width:520px){.intro-scene{min-height:calc(100vh - 66px);min-height:calc(100svh - 66px)}.intro-photo{object-position:58% center}.intro-content{width:calc(100% - 36px);padding:75px 0 105px}.intro-content h1{font-size:clamp(43px,12vw,58px)}.intro-description{max-width:370px}.intro-caption{left:18px;right:18px;bottom:20px}.intro-particles{opacity:.6}}
 @media(prefers-reduced-motion:reduce){.intro-bg-word,.intro-photo,.intro-content,.intro-particle{animation:none!important}.intro-photo-layer,.intro-content{transition:none!important;transform:none!important;will-change:auto}.intro-particle{display:none}.intro-bg-word{transform:none}}
+
+
+/* Section 2: reveal the three core ideas on scroll, once per reset. */
+.stats-section{margin-bottom:92px}
+.stats-section .stats{margin-bottom:0}
+.stats-item{opacity:0;transform:translateY(12px);transition:opacity .5s ease,transform .5s ease}
+.stats-item.is-revealed{opacity:1;transform:translateY(0)}
+.stats-item:nth-child(2){transition-delay:.2s}
+.stats-item:nth-child(3){transition-delay:.4s}
+.stats-reset-wrap{display:flex;justify-content:center;padding-top:12px}
+.stats-reset{border:1px solid #e5e1f4;background:#fff;color:#6558d9;border-radius:8px;padding:8px 12px;font:600 10px 'Be Vietnam Pro',sans-serif;cursor:pointer;transition:background .2s,border-color .2s}
+.stats-reset:hover{background:#f1efff;border-color:#d8d1ff}
+.stats-reset:focus-visible{outline:3px solid #b9b0ff;outline-offset:3px}
+@media(max-width:620px){.stats-section{margin-bottom:65px}}
+@media(prefers-reduced-motion:reduce){.stats-item,.stats-item:nth-child(2),.stats-item:nth-child(3){opacity:1;transform:none;transition:none}}
