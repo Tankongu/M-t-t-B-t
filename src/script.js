@@ -97,6 +97,8 @@ paintTimer();
   const scene = $('.intro-scene');
   if (!scene) return;
   const particlesLayer = $('.intro-particles');
+  const groupPhoto = $('.intro-photo');
+  if (groupPhoto) groupPhoto.addEventListener('error', () => { groupPhoto.style.display = 'none'; scene.classList.add('intro-image-missing'); });
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   let inView = false;
   let pointerX = 0;
